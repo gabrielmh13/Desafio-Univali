@@ -1,9 +1,15 @@
+import { useNavigate } from "react-router-dom";
 import { Container, StyledTable } from "./styles";
 
 export function Table({ data }){
+    const navigate = useNavigate()
 
-    function handleEditItem(){
-        console.log("Editando item")
+    function handleEditItem(name){
+        navigate("/formulario", {
+            state: {
+                name
+            }
+        })
     }
 
     function handleDeleteItem(){
@@ -44,30 +50,30 @@ export function Table({ data }){
                 <tbody>
                     {
                         data.map((item) => (
-                            <tr key={item.id}>
+                            <tr key={item.name}>
                                 <td>
-                                    {item.id}
+                                    {item.name}
                                 </td>
                                 <td>
-                                    {item.id}
+                                    {item.measurementField.toUpperCase()}
                                 </td>
                                 <td>
-                                    {item.id}
+                                    {item.quantity}
                                 </td>
                                 <td>
-                                    {item.id}
+                                    R$ {item.price}
                                 </td>
                                 <td>
-                                    {item.id}
+                                    {item.perishable ? 'SIM' : 'NÃO'}
                                 </td>
                                 <td>
-                                    {item.id}
+                                    {(item.validity && new Date(item.validity).toLocaleDateString("pt-BR")) || 'N/A'}
                                 </td>
                                 <td>
-                                    {item.id}
+                                    {new Date(item.fabrication).toLocaleDateString("pt-BR")}
                                 </td>
                                 <td>
-                                    <button onClick={handleEditItem}>Editar</button>
+                                    <button onClick={() => handleEditItem(item.name)}>Editar</button>
                                     <button onClick={handleDeleteItem}>Remover</button>
                                 </td>
                             </tr>

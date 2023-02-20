@@ -1,84 +1,14 @@
+import { useEffect, useState } from "react";
 import { Table } from "./components/Table";
 import { Container, Header, StyledLink } from "./styles";
 
 export function Listing(){
-    const data = [
-        {
-            id: 'id item'
-        },
-        {
-            id: 'id item 2'
-        },
-        {
-            id: 'id item 2'
-        },
-        {
-            id: 'id item 2'
-        },
-        {
-            id: 'id item 2'
-        },
-        {
-            id: 'id item 2'
-        },
-        {
-            id: 'id item 2'
-        },
-        {
-            id: 'id item 2'
-        },
-        {
-            id: 'id item 2'
-        },
-        {
-            id: 'id item 2'
-        },
-        {
-            id: 'id item 2'
-        },
-        {
-            id: 'id item 2'
-        },
-        {
-            id: 'id item 2'
-        },
-        {
-            id: 'id item 2'
-        },
-        {
-            id: 'id item 2'
-        },
-        {
-            id: 'id item 2'
-        },
-        {
-            id: 'id item 2'
-        },
-        {
-            id: 'id item 2'
-        },
-        {
-            id: 'id item 2'
-        },
-        {
-            id: 'id item 2'
-        },
-        {
-            id: 'id item 2'
-        },
-        {
-            id: 'id item 2'
-        },
-        {
-            id: 'id item 2'
-        },
-        {
-            id: 'id item 2'
-        },
-        {
-            id: 'id item 2'
-        }
-    ]
+    const [items, setItems] = useState([])
+
+    useEffect(() => {
+        const rawData = localStorage.getItem('@univali')
+        setItems(JSON.parse(rawData))
+    }, []);
 
     return (
         <Container>
@@ -89,7 +19,7 @@ export function Listing(){
                     Novo Item
                 </StyledLink>
             </Header>
-            <Table data={data} />
+            <Table data={items || []} />
         </Container>
     )
 }

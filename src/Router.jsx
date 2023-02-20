@@ -1,13 +1,13 @@
 import { Routes, Route } from "react-router-dom";
 
 import { Listing } from './pages/Listing'
-import { Register } from './pages/Register'
+import { Form } from './pages/Form'
 
 export function Router(){
     return (
         <Routes>
             <Route path='/' element={<Listing />}/>
-            <Route path='/formulario' element={<Register />} />
+            <Route path='/formulario' element={<Form />} />
         </Routes>
     )
 }
