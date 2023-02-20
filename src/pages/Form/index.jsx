@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Container, Select, Input, FormContainer, CheckBoxContainer, InputContainer, ButtonContainer, Button, CurrencyInputField } from "./styles";
+import { Container, Select, Input, FormContainer, CheckBoxContainer, InputContainer, ButtonContainer, Button } from "./styles";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup"
 import * as yup from "yup";
@@ -155,7 +155,6 @@ export function Form(){
                 <p style={{color: 'red'}}>{errors.price?.message}</p>
                 <InputContainer>
                     <span>R$</span>
-                    {/* <CurrencyInputField type="number" step={0.01} name="price" placeholder="0.00" {...register("price")} /> */}
                     <Input type="number" step={0.01} name="price" placeholder="0.00" {...register("price")} />
                 </InputContainer>
 

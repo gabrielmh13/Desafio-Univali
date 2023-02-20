@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import CurrencyInput from "react-currency-masked-input";
 
 export const Container = styled.div`
     width: 100%;
@@ -116,19 +115,5 @@ export const Button = styled.button`
 
     &:hover {
         background-color: #222;
-    }
-`
-
-export const CurrencyInputField = styled(CurrencyInput)`
-    width: 100%;
-    height: 3rem;
-    padding: 0.8rem;
-    border-radius: 0.5rem;
-    background-color: #333;
-    color: white;
-    font-size: 1rem;
-
-    &::placeholder {
-        color: white;
     }
 `
