@@ -5,6 +5,7 @@ import { yupResolver } from "@hookform/resolvers/yup"
 import * as yup from "yup";
 import { useLocation, useNavigate } from "react-router-dom";
 import uuid from "react-uuid";
+import { GetLocalStorage, SetLocalStorage } from '../../utils/localStorage'
 
 export function Form(){
     const [measurement, setMeasurement] = useState('lt')
@@ -88,10 +89,9 @@ export function Form(){
 
     function onSubmitHandler(data){
         data.id = currentItem?.id
-        const rawItems = localStorage.getItem('@univali')
+        let items = GetLocalStorage('@univali')
 
-        if(rawItems){
-            let items = JSON.parse(rawItems)
+        if(items){
             let index = items.findIndex(item => item.id === data.id)
 
             if(index >= 0){
@@ -102,7 +102,7 @@ export function Form(){
                 items.push(data)
             }
 
-            localStorage.setItem('@univali', JSON.stringify(items))
+            SetLocalStorage('@univali', items)
             navigate("/")
             return
 
@@ -112,7 +112,7 @@ export function Form(){
         data.id = uuid()
         newItem.push(data)
         
-        localStorage.setItem('@univali', JSON.stringify(newItem))
+        SetLocalStorage('@univali', newItem)
         navigate("/")
         return
     }

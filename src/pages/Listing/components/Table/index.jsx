@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { GetLocalStorage, SetLocalStorage } from "../../../../utils/localStorage";
 import { Container, StyledTable } from "./styles";
 
 export function Table({ data }){
@@ -17,15 +18,15 @@ export function Table({ data }){
 
     function handleDeleteItem(id){
         if (window.confirm('Você tem certeza que deseja excluir este item?')){
-           const rawItems = localStorage.getItem('@univali')
-           let items = JSON.parse(rawItems)
+
+           let items = GetLocalStorage('@univali')
 
            const index = items.findIndex(item => item.id === id)
            
            items.splice(index, 1)
            setItemsList(items)
 
-           localStorage.setItem('@univali', JSON.stringify(items))
+           SetLocalStorage('@univali', items)
 
            window.alert('Item excluído com sucesso!')
         }

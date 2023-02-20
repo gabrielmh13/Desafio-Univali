@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { GetLocalStorage } from "../../utils/localStorage";
 import { Table } from "./components/Table";
 import { Container, Header, StyledLink } from "./styles";
 
@@ -6,8 +7,8 @@ export function Listing(){
     const [items, setItems] = useState([])
 
     useEffect(() => {
-        const rawData = localStorage.getItem('@univali')
-        setItems(JSON.parse(rawData))
+        const data = GetLocalStorage('@univali')
+        setItems(data)
     }, []);
 
     return (
