@@ -1,14 +1,18 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Container, Select, Input, FormContainer, CheckBoxContainer, InputContainer, ButtonContainer, Button, CurrencyInputField } from "./styles";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup"
 import * as yup from "yup";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import uuid from "react-uuid";
 
 export function Form(){
     const [measurement, setMeasurement] = useState('lt')
     const patternThreeDigisAfterComma = /^\d+(\.\d{0,3})?$/
     const navigate = useNavigate()
+    const location = useLocation()
+
+    const currentItem = location.state?.item
 
     // Schema para validação de formulario
     const schema = yup.object({
@@ -52,6 +56,11 @@ export function Form(){
                 if(validity[0] instanceof Date && !isNaN(validity[0])){
                     return rule.min(new Date(), "Produto vencido")
                 }
+            }),
+            otherwise: rule => rule.notRequired().when('validity', (validity, rule) => {
+                if(validity[0] instanceof Date && !isNaN(validity[0])){
+                    return rule.min(new Date(), "Produto vencido")
+                }
             })
         }),
 
@@ -62,24 +71,34 @@ export function Form(){
         })
 
     })
-
     // Fim do schema de validação de formulario
 
     const { register, handleSubmit, formState: { errors }} = useForm({
+        defaultValues: {
+            name: currentItem?.name,
+            measurementField: currentItem?.measurementField,
+            quantity: currentItem?.quantity,
+            price: parseFloat(currentItem?.price).toFixed(2),
+            perishable: currentItem?.perishable,
+            validity: currentItem?.validity && new Date(currentItem?.validity).toISOString().split('T')[0],
+            fabrication: currentItem?.fabrication && new Date(currentItem?.fabrication).toISOString().split('T')[0]
+        },
         resolver: yupResolver(schema)
     });
 
     function onSubmitHandler(data){
+        data.id = currentItem?.id
         const rawItems = localStorage.getItem('@univali')
 
         if(rawItems){
             let items = JSON.parse(rawItems)
-            let index = items.findIndex(item => item.name === data.name)
+            let index = items.findIndex(item => item.id === data.id)
 
             if(index >= 0){
                 items[index] = data
             }
             else {
+                data.id = uuid()
                 items.push(data)
             }
 
@@ -90,6 +109,7 @@ export function Form(){
         }
 
         let newItem = []
+        data.id = uuid()
         newItem.push(data)
         
         localStorage.setItem('@univali', JSON.stringify(newItem))
@@ -101,6 +121,10 @@ export function Form(){
         event.preventDefault();
         navigate("/")
     }
+
+    useEffect(() => {
+        currentItem?.measurementField && setMeasurement(currentItem?.measurementField)
+    }, [currentItem?.measurementField])
 
 
     return (
@@ -131,7 +155,8 @@ export function Form(){
                 <p style={{color: 'red'}}>{errors.price?.message}</p>
                 <InputContainer>
                     <span>R$</span>
-                    <CurrencyInputField name="price" placeholder="0.00" {...register("price")}/>
+                    {/* <CurrencyInputField type="number" step={0.01} name="price" placeholder="0.00" {...register("price")} /> */}
+                    <Input type="number" step={0.01} name="price" placeholder="0.00" {...register("price")} />
                 </InputContainer>
 
                 <CheckBoxContainer>

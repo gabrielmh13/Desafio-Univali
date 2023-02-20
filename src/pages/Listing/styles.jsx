@@ -28,4 +28,8 @@ export const StyledLink = styled(Link)`
     color: white;
     padding: 0.5rem;
     border-radius: 0.5rem;
+
+    &:hover {
+        background-color: #222;
+    }
 `

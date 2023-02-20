@@ -1,20 +1,39 @@
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Container, StyledTable } from "./styles";
 
 export function Table({ data }){
+    const [itemsList, setItemsList] = useState([])
+
     const navigate = useNavigate()
 
-    function handleEditItem(name){
+    function handleEditItem(item){
         navigate("/formulario", {
             state: {
-                name
+                item
             }
         })
     }
 
-    function handleDeleteItem(){
-        console.log("Deleting item")
+    function handleDeleteItem(id){
+        if (window.confirm('Você tem certeza que deseja excluir este item?')){
+           const rawItems = localStorage.getItem('@univali')
+           let items = JSON.parse(rawItems)
+
+           const index = items.findIndex(item => item.id === id)
+           
+           items.splice(index, 1)
+           setItemsList(items)
+
+           localStorage.setItem('@univali', JSON.stringify(items))
+
+           window.alert('Item excluído com sucesso!')
+        }
     }
+
+    useEffect(() => {
+        setItemsList(data)
+    }, [data])
 
     return (
         <Container>
@@ -49,8 +68,8 @@ export function Table({ data }){
                 </thead>
                 <tbody>
                     {
-                        data.map((item) => (
-                            <tr key={item.name}>
+                        itemsList.map((item) => (
+                            <tr key={item.id}>
                                 <td>
                                     {item.name}
                                 </td>
@@ -61,7 +80,7 @@ export function Table({ data }){
                                     {item.quantity}
                                 </td>
                                 <td>
-                                    R$ {item.price}
+                                    R$ {parseFloat(item.price).toFixed(2)}
                                 </td>
                                 <td>
                                     {item.perishable ? 'SIM' : 'NÃO'}
@@ -73,8 +92,8 @@ export function Table({ data }){
                                     {new Date(item.fabrication).toLocaleDateString("pt-BR")}
                                 </td>
                                 <td>
-                                    <button onClick={() => handleEditItem(item.name)}>Editar</button>
-                                    <button onClick={handleDeleteItem}>Remover</button>
+                                    <button onClick={() => handleEditItem(item)}>Editar</button>
+                                    <button onClick={() => handleDeleteItem(item.id)}>Remover</button>
                                 </td>
                             </tr>
                         ))
